@@ -1,14 +1,22 @@
-import React, { Component } from 'react';
-import { JobList } from './JobList';
-const { jobs } = require('./fake-data');
+import { useState, useEffect } from "react";
+import { JobList } from "./JobList";
+import { loadJobs } from "./request";
 
-export class JobBoard extends Component {
-  render() {
-    return (
-      <div>
-        <h1 className="title">Job Board</h1>
-        <JobList jobs={jobs} />
-      </div>
-    );
-  }
-}
+export const JobBoard = () => {
+  const [jobs, setJobs] = useState();
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await loadJobs();
+      setJobs(data);
+    }
+    fetchData();
+  }, []);
+
+  return (
+    <div>
+      <h1 className="title">Job Board</h1>
+      {jobs && <JobList jobs={jobs} />}
+    </div>
+  );
+};
